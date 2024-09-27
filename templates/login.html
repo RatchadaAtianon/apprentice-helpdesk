@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* General Styles */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            transition: background-color 0.6s ease-in-out;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            background-color: #232f3e;
+            color: white;
+            border-bottom: 3px solid #ffa500;
+        }
+
+        .header img {
+            max-width: 120px;
+        }
+
+        .auth-container {
+            width: 800px;
+            height: 500px;
+            margin: 0 auto;
+            margin-top: 50px;
+            display: flex;
+            background-color: white;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            transition: background-color 0.6s ease-in-out;
+        }
+
+        .form-container {
+            width: 50%;
+            padding: 40px;
+            position: relative;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .login-container {
+            background-color: #f8f9fa;
+        }
+
+        .register-container {
+            background-color: #f8f9fa;
+
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container input {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .form-container button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-container button {
+            background-color: #232F3E;
+            color: white;
+        }
+
+        .register-container button {
+            background-color: #232F3E;
+            color: white;
+        }
+
+        .switch-overlay {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            background-color: #232F3E;
+            transition: all 0.6s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .switch-overlay.active {
+            left: 0;
+        }
+
+        /* Media Queries for mobile */
+        @media (max-width: 768px) {
+            .auth-container {
+                width: 100%;
+                flex-direction: column;
+                height: auto;
+            }
+
+            .form-container, .switch-overlay {
+                width: 100%;
+                height: 100%;
+            }
+
+            .switch-overlay {
+                left: 0 !important;
+                top: 50%;
+                transform: translateY(-50%);
+
+            }
+
+
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+  <header class="header">
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo">
+        </a>
+        <div class="hamburger" onclick="toggleNav()">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+    </header>
+
+    <!-- Auth Container (Login/Register) -->
+    <div class="auth-container" id="authContainer">
+        <!-- Login Section -->
+        <div class="form-container login-container" id="loginContainer">
+            <h2>Login</h2>
+            <form action="/login" method="POST">
+                <input type="text" id="username" name="username" placeholder="Username" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <!-- Register Section -->
+         <div class="form-container register-container" id="registerContainer">
+            <h2>Register</h2>
+            <form id="registerForm" action="/register" method="POST" onsubmit="return validateForm()">
+                <input type="text" id="regUsername" name="username" placeholder="Username"
+                       pattern="^[a-zA-Z0-9]{8,16}$" title="Username must be 8-16 characters with no special characters" required>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="password" id="regPassword" name="password" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+         </div>
+
+        <!-- Switch Overlay -->
+        <div class="switch-overlay" id="switchOverlay" onclick="switchForms()">
+            Register
+        </div>
+    </div>
+
+    <script>
+        // Switching function for login/register form
+        function switchForms() {
+            const loginContainer = document.getElementById('loginContainer');
+            const registerContainer = document.getElementById('registerContainer');
+            const switchOverlay = document.getElementById('switchOverlay');
+            const authContainer = document.getElementById('authContainer');
+            const body = document.body;
+
+            // Toggle classes for transition
+            loginContainer.classList.toggle('active');
+            registerContainer.classList.toggle('active');
+            switchOverlay.classList.toggle('active');
+            authContainer.classList.toggle('active');
+
+            // Change background color of body when registering
+            if (switchOverlay.textContent === 'Login') {
+                switchOverlay.textContent = 'Register';
+
+            } else {
+                switchOverlay.textContent = 'Login';
+                body.style.backgroundColor = '#f0f2f5'; // Reset background when on the login side
+            }
+
+                  // Validate registration form
+            function validateForm() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+
+            // Validate username: 8-16 alphanumeric characters
+            const usernamePattern = /^[a-zA-Z0-9]{8,16}$/;
+            if (!usernamePattern.test(username)) {
+                alert('Username must be 8-16 characters long and contain no special characters.');
+                return false;
+            }
+
+            // Validate password: minimum 8 characters
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long.');
+                return false;
+            }
+
+            return true;  // If everything is valid
+        }
+        }
+    </script>
+
+</body>
+</html>

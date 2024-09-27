@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Ticket</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        /* Modal Styles */
+        button {
+            display: inline-block;
+            color: white;
+            background-color: #232f3e;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .modal-header, .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .close {
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: red;
+        }
+        /* Container Styles */
+        .container {
+            margin: 20px auto;
+            max-width: 960px;
+            padding: 20px;
+        }
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .form-row .col-md-6, .form-row .col-md-12 {
+            width: 100%;
+            padding: 0 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .flashes {
+            list-style: none;
+            padding: 0;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            background-color: #232f3e;
+            color: white;
+            border-bottom: 3px solid #ffa500;
+        }
+        .header img {
+            max-width: 120px;
+        }
+        .hamburger {
+            cursor: pointer;
+            display: none; /* Initially hidden for larger screens */
+        }
+        .hamburger .bar {
+            background: white;
+            height: 3px;
+            width: 25px;
+            margin: 4px 0;
+            transition: 0.3s;
+        }
+        .nav {
+            display: flex;
+            flex-direction: row; /* Horizontal navigation */
+        }
+        .nav a {
+            margin-left: 20px;
+            color: white;
+            text-decoration: none;
+        }
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav {
+                display: none; /* Hide on mobile by default */
+                flex-direction: column; /* Vertical layout for mobile */
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background-color: #232f3e;
+                padding: 10px;
+                border-radius: 5px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+            .nav.active {
+                display: flex; /* Show when active */
+            }
+            .hamburger {
+                display: block; /* Show hamburger on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo">
+        </a>
+        <div class="hamburger" onclick="toggleNav()">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <nav class="nav" id="navbar">
+            <a href="/submit_ticket">Submit a Ticket</a>
+            <a href="/tickets">View Tickets</a>
+            {% if 'username' in session %}
+                {% if session['role'] == 'admin' %}
+                    <a href="{{ url_for('admin_users') }}">Manage Users</a>
+                {% endif %}
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            {% else %}
+                <a href="/login" class="btn btn-warning">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1><i class="fas fa-ticket-alt"></i> Submit Ticket</h1>
+        <form id="submitTicketForm" action="/submit_ticket" method="POST">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="priority">Priority:</label>
+                <select id="priority" name="priority" required>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+            </div>
+            <div class="text-center">
+                <button type="button" onclick="validateAndOpenModal()">Submit Ticket</button>
+                <button type="button" class="btn btn-danger" onclick="confirmCancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmUpdateModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p>Are you sure you want to submit this ticket?</p>
+            <button type="button" class="btn btn-success" onclick="submitTicket()">Yes, Submit</button>
+            <button type="button" class="btn btn-danger" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to toggle the navigation menu
+        function toggleNav() {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('active'); // Toggle the active class
+        }
+
+        // Function to validate input and open the modal
+        function validateAndOpenModal() {
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+
+            // Basic validation
+            if (!title || title.length < 5) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'The title must be at least 5 characters long.',
+                    confirmButtonText: 'OK'
+                });
+                return;  // Exit the function if validation fails
+            }
+
+            if (!description || description.length < 10) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'The description must be at least 10 characters long.',
+                    confirmButtonText: 'OK'
+                });
+                return;  // Exit the function if validation fails
+            }
+
+            // Open the confirmation modal if validation passes
+            openConfirmModal();
+        }
+
+        // Function to open the modal
+        function openConfirmModal() {
+            document.getElementById('confirmUpdateModal').style.display = 'block';
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('confirmUpdateModal').style.display = 'none';
+        }
+
+        // Function to handle form submission after confirmation
+        function submitTicket() {
+            document.getElementById('submitTicketForm').submit();  // Submit the form
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            var modal = document.getElementById('confirmUpdateModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Function to handle the cancel button logic
+        function confirmCancel() {
+            window.location.href = '/tickets'; // Redirect to the tickets page
+        }
+    </script>
+</body>
+</html>
