@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
-bcrypt = Bcrypt(app)  # Initialize Bcrypt
+bcrypt = Bcrypt(app)  # Initialise Bcrypt
 
 def get_db_connection():
     conn = sqlite3.connect('helpdesk.db')
@@ -279,5 +279,5 @@ def api_tickets():
     return jsonify([dict(ticket) for ticket in tickets])  # Convert to a list of dictionaries
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000)
+    app.run(debug=True)
 
