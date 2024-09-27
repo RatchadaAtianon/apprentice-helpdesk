@@ -279,4 +279,5 @@ def api_tickets():
     return jsonify([dict(ticket) for ticket in tickets])  # Convert to a list of dictionaries
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=3000)
+
