@@ -98,6 +98,7 @@ def logout():
 def faq():
     return render_template('faq.html')
 
+
 @app.route('/admin_users')
 def admin_users():
     if 'username' not in session:
@@ -105,6 +106,14 @@ def admin_users():
         return redirect(url_for('login'))
 
     conn = get_db_connection()
+
+    # Fetch the logged-in user's role
+    user = conn.execute('SELECT role FROM users WHERE username = ?', (session['username'],)).fetchone()
+
+    if not user or user['role'] != 'admin':
+        conn.close()
+        return "Forbidden", 403  # You can use `abort(403)` if using Flask's error handling
+
     role_filter = request.args.get('role')
 
     if role_filter:
@@ -114,6 +123,7 @@ def admin_users():
 
     conn.close()
     return render_template('admin_users.html', users=users, role=role_filter)
+
 
 @app.route('/admin/users/edit/<int:user_id>', methods=['GET', 'POST'])
 def edit_user(user_id):
