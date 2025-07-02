@@ -93,6 +93,11 @@ def logout():
     session.pop('username', None)  # Log the user out
     return redirect(url_for('login'))
 
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
 @app.route('/admin_users')
 def admin_users():
     if 'username' not in session:
@@ -217,6 +222,27 @@ def view_ticket(ticket_id):
         return redirect(url_for('tickets'))
 
     return render_template('view_ticket.html', ticket=ticket)
+
+
+@app.route('/search')
+def search():
+    username_query = request.args.get('apprentice_username', '').strip()
+
+    if not username_query:
+        flash("No search term provided.", "error")
+        return redirect(url_for('home'))
+
+    conn = get_db_connection()
+    # Query tickets joined with users, filter by username like input
+    results = conn.execute('''
+        SELECT tickets.*, users.username
+        FROM tickets
+        JOIN users ON tickets.user_id = users.id
+        WHERE users.username LIKE ?
+    ''', (f'%{username_query}%',)).fetchall()
+    conn.close()
+
+    return render_template('search_results.html', results=results, query=username_query)
 
 @app.route('/submit_ticket', methods=['GET', 'POST'])
 def submit_ticket():

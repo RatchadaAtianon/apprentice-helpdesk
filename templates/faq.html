@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FAQ - Apprentice Helpdesk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <style>
+        .main-section {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+
+
+            color: #333;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #232f3e;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        #faqSearch {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #232f3e;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #faqSearch:focus {
+            border-color: #ffa500;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            color: #232f3e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background-color: #ffa500;
+            color: white;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 25px;
+            font-size: 16px;
+            color: #495057;
+            line-height: 1.5;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+        }
+
+        .faq-answer.open {
+            padding: 20 45px;
+        }
+
+        .faq-answer.open p {
+            padding: 0;
+        }
+
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .rotate-icon.open {
+            transform: rotate(180deg);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .faq-question {
+                font-size: 16px;
+                padding: 15px 20px;
+            }
+
+            .faq-answer {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- START Header (copied from Tickets page) -->
+    <header class="header">
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo">
+        </a>
+        <div class="hamburger" onclick="toggleNav()">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <nav class="nav" id="navbar">
+            <a href="/submit_ticket">Submit a Ticket</a>
+            <a href="/tickets">View Tickets</a>
+            {% if 'username' in session %}
+                {% if session['role'] == 'admin' %}
+                    <a href="{{ url_for('admin_users') }}">Manage Users</a>
+                {% endif %}
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            {% else %}
+                <a href="/login" class="btn btn-warning">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+    <!-- END Header -->
+    <div class ="main-section">
+
+    <h1>Frequently Asked Questions</h1>
+
+    <input type="text" id="faqSearch" placeholder="Search FAQs..." aria-label="Search Frequently Asked Questions" />
+
+    <div id="faqList">
+        <div class="faq-item">
+            <div class="faq-question" tabindex="0" aria-expanded="false" aria-controls="answer-1" id="question-1">
+                How do I reset my password?
+                <i class="fas fa-chevron-down rotate-icon" aria-hidden="true"></i>
+            </div>
+            <div class="faq-answer" id="answer-1" role="region" aria-labelledby="question-1">
+                <p>To reset your password, go to the login page and click "Forgot Password". Follow the instructions sent to your email.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" tabindex="0" aria-expanded="false" aria-controls="answer-2" id="question-2">
+                How do I submit a support ticket?
+                <i class="fas fa-chevron-down rotate-icon" aria-hidden="true"></i>
+            </div>
+            <div class="faq-answer" id="answer-2" role="region" aria-labelledby="question-2">
+                <p>Navigate to the "Submit a Ticket" page, fill in the required details, and submit your request.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" tabindex="0" aria-expanded="false" aria-controls="answer-3" id="question-3">
+                Who can view my submitted tickets?
+                <i class="fas fa-chevron-down rotate-icon" aria-hidden="true"></i>
+            </div>
+            <div class="faq-answer" id="answer-3" role="region" aria-labelledby="question-3">
+                <p>Only you and administrators can view your submitted tickets.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" tabindex="0" aria-expanded="false" aria-controls="answer-4" id="question-4">
+                What is the typical response time for tickets?
+                <i class="fas fa-chevron-down rotate-icon" aria-hidden="true"></i>
+            </div>
+            <div class="faq-answer" id="answer-4" role="region" aria-labelledby="question-4">
+                <p>We aim to respond within 24 hours during business days.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" tabindex="0" aria-expanded="false" aria-controls="answer-5" id="question-5">
+                Can I track the status of my ticket?
+                <i class="fas fa-chevron-down rotate-icon" aria-hidden="true"></i>
+            </div>
+            <div class="faq-answer" id="answer-5" role="region" aria-labelledby="question-5">
+                <p>Yes! Log in to your account and visit the "View Tickets" page to check status updates.</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        $(document).ready(function () {
+            // Accordion toggle on click or keyboard
+            $('.faq-question').on('click keydown', function (e) {
+                if (e.type === 'click' || e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const $question = $(this);
+                    const $answer = $question.next('.faq-answer');
+                    const isOpen = $answer.hasClass('open');
+
+                    if (isOpen) {
+                        $answer.removeClass('open').css('max-height', 0);
+                        $question.attr('aria-expanded', 'false');
+                        $question.find('.rotate-icon').removeClass('open');
+                    } else {
+                        // Close others
+                        $('.faq-answer.open').removeClass('open').css('max-height', 0);
+                        $('.faq-question').attr('aria-expanded', 'false').find('.rotate-icon').removeClass('open');
+
+                        // Open clicked one
+                        $answer.addClass('open').css('max-height', $answer.prop('scrollHeight') + 'px');
+                        $question.attr('aria-expanded', 'true');
+                        $question.find('.rotate-icon').addClass('open');
+                    }
+                }
+            });
+
+            // FAQ Search
+            $('#faqSearch').on('input', function () {
+                const query = $(this).val().toLowerCase();
+                $('.faq-item').each(function () {
+                    const questionText = $(this).find('.faq-question').text().toLowerCase();
+                    const answerText = $(this).find('.faq-answer').text().toLowerCase();
+                    if (questionText.includes(query) || answerText.includes(query)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+
+        // Toggle nav for hamburger
+        function toggleNav() {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('active');
+        }
+    </script>
+
+</body>
+
+</html>
