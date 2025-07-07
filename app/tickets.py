@@ -119,16 +119,23 @@ def edit_ticket(ticket_id):
 
     return render_template('edit_ticket.html', ticket=ticket)
 
-@app.route('/admin/tickets/delete_closed', methods=['POST'])
-def delete_ticket():
+@app.route('/delete_ticket/<int:ticket_id>', methods=['POST'])
+def delete_ticket(ticket_id):
     if 'username' not in session or session.get('role') != 'admin':
         flash('You do not have permission to perform this action.', 'error')
         return redirect(url_for('home'))
 
     conn = get_db_connection()
-    conn.execute('DELETE FROM tickets WHERE status = ?', ('closed',))
+    ticket = conn.execute('SELECT * FROM tickets WHERE id = ?', (ticket_id,)).fetchone()
+    if not ticket:
+        conn.close()
+        flash('Ticket not found.', 'error')
+        return redirect(url_for('tickets'))
+
+    conn.execute('DELETE FROM tickets WHERE id = ?', (ticket_id,))
     conn.commit()
     conn.close()
 
-    flash('Closed tickets have been deleted successfully!', 'success')
+    flash(f"Ticket '{ticket['title']}' has been deleted.", 'success')
     return redirect(url_for('tickets'))
+
