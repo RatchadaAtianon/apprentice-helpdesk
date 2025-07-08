@@ -238,22 +238,51 @@
       navbar.classList.toggle('active');
     }
 
-  function validateAndOpenModal() {
+function validateAndOpenModal() {
   const title = document.getElementById('title').value.trim();
   const description = document.getElementById('description').value.trim();
 
-  if (!title || title.length < 5 || !description || description.length < 10) {
+  if (!title) {
     Swal.fire({
       icon: 'error',
-      title: 'Invalid input',
-      showConfirmButton: false,
-      timer: 1500
+      title: 'Missing Title',
+      text: 'Please enter a title for your ticket.',
+    });
+    return;
+  }
+
+  if (title.length < 5) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Title Too Short',
+      text: 'The title must be at least 5 characters long.',
+    });
+    return;
+  }
+
+  if (!description) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing Description',
+      text: 'Please provide a description for your issue.',
+    });
+    return;
+  }
+
+  if (description.length < 10) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Description Too Short',
+      text: 'The description must be at least 10 characters long.',
     });
     return;
   }
 
   openConfirmModal();
 }
+
+
+
 
 
 

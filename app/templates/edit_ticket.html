@@ -62,12 +62,12 @@
         }
 
         .btn-primary {
-            background-color: #232f3e;
+
             color: white;
         }
 
         .btn-secondary {
-            background-color: #6c757d;
+            background-color: #232f3e;;
             color: white;
         }
 
@@ -210,8 +210,9 @@
 
         <!-- Buttons -->
         <div class="text-center">
-            <button type="button" class="btn btn-primary" onclick="openConfirmModal()">Update Ticket</button>
             <a href="{{ url_for('tickets') }}" class="btn btn-secondary">Cancel</a>
+            <button type="button" class="btn btn-primary" onclick="openConfirmModal()">Update Ticket</button>
+
         </div>
     </form>
 
@@ -227,7 +228,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-danger" onclick="document.getElementById('editTicketForm').submit();">Update Ticket</button>
+                <button class="btn btn-primary" onclick="document.getElementById('editTicketForm').submit();">Update Ticket</button>
             </div>
         </div>
     </div>
