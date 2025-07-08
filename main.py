@@ -10,6 +10,11 @@ def home():
     return redirect(url_for('login'))
 
 
+from flask import render_template
+
+@app.route("/faq")
+def faq():
+    return render_template("faq.html")
 
 
 if __name__ == '__main__':

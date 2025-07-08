@@ -12,6 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
+
+
     <style>
         /* Minimal overrides for welcome page */
 
@@ -190,6 +192,7 @@
                     <a href="{{ url_for('admin_users') }}">Manage Users</a>
                 {% endif %}
                 <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
+>
             {% else %}
                 <a href="/login" class="btn btn-warning">Login</a>
             {% endif %}
@@ -291,21 +294,20 @@
             }
         });
 
-        // Logout confirmation
-        function confirmLogout() {
-            Swal.fire({
-                title: 'Are you sure you want to logout?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#dc3545',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Logout'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '{{ url_for("logout") }}';
-                }
-            });
+  function confirmLogout() {
+    Swal.fire({
+        title: 'Are you sure you want to logout?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Logout'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '{{ url_for("logout") }}';
         }
+    });
+}
     </script>
 </body>
 

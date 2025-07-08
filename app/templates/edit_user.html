@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         /* General styles */
         body {
@@ -198,7 +200,8 @@
             {% if session['role'] == 'admin' %}
                 <a href="{{ url_for('admin_users') }}">Manage Users</a>
             {% endif %}
-            <a href="/logout" class="btn btn-danger">Logout</a>
+   <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
+
         {% else %}
             <a href="/login" class="btn btn-warning">Login</a>
         {% endif %}
@@ -234,6 +237,20 @@
         var navbar = document.getElementById('navbar');
         navbar.classList.toggle('active');
     }
+    function confirmLogout() {
+    Swal.fire({
+        title: 'Are you sure you want to logout?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Logout'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '{{ url_for("logout") }}';
+        }
+    });
+}
 </script>
 
 </body>

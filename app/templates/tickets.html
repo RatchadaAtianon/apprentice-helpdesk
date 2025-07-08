@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <style>
         div.form-row {
@@ -35,7 +37,8 @@
                 {% if session['role'] == 'admin' %}
                     <a href="{{ url_for('admin_users') }}">Manage Users</a>
                 {% endif %}
-                <a href="/logout" class="btn btn-danger">Logout</a>
+              <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
+
             {% else %}
                 <a href="/login" class="btn btn-warning">Login</a>
             {% endif %}
@@ -165,6 +168,20 @@
 
     <!-- JavaScript Section -->
     <script>
+        function confirmLogout() {
+    Swal.fire({
+        title: 'Are you sure you want to logout?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Logout'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '{{ url_for("logout") }}';
+        }
+    });
+}
         function openModal(ticketId, ticketTitle) {
             document.getElementById('modal-ticket-title').innerText = ticketTitle;
             document.getElementById('modal-ticket-id').value = ticketId;
