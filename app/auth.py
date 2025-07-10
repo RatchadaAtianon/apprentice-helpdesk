@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for, session, flash
 from app import app, bcrypt
 from app.db import get_db_connection
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -20,6 +21,7 @@ def login():
 
         flash('Invalid credentials. Please try again.', 'error')
     return render_template('login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -53,6 +55,7 @@ def register():
         return redirect(url_for('home'))
 
     return render_template('register.html')
+
 
 @app.route('/logout')
 def logout():

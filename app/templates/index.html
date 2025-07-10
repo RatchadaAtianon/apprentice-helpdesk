@@ -2,16 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Welcome to Helpdesk</title>
 
     <!-- Custom Stylesheet -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
 
 
     <style>
@@ -167,143 +166,143 @@
         }
     </style>
     <!-- Bootstrap JS (needed for alert dismiss) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </head>
 
 <body>
-    <!-- Header with Navigation -->
-    <header class="header">
-        <a href="{{ url_for('home') }}">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo" />
-        </a>
+<!-- Header with Navigation -->
+<header class="header">
+    <a href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo"/>
+    </a>
 
-        <div class="hamburger" onclick="toggleNav()" aria-label="Toggle navigation" role="button" tabindex="0">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-
-        <nav class="nav" id="navbar" aria-label="Primary Navigation">
-            <a href="/submit_ticket">Submit a Ticket</a>
-            <a href="/tickets">View Tickets</a>
-            {% if 'username' in session %}
-                {% if session['role'] == 'admin' %}
-                    <a href="{{ url_for('admin_users') }}">Manage Users</a>
-                {% endif %}
-                <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
->
-            {% else %}
-                <a href="/login" class="btn btn-warning">Login</a>
-            {% endif %}
-        </nav>
-    </header>
-
-     {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
-    <!-- Main Welcome Content -->
-    <div class="welcome-container" role="main">
-        <h1>Welcome to the Apprentice Helpdesk</h1>
-        <p>We’re here to assist you with all your queries and issues. Feel free to explore our help topics or submit a ticket for personalised support.</p>
-
-        {% if 'username' in session %}
-            <p class="user-greeting">Hello, <strong>{{ session['username'] }}</strong>! </p>
-        {% endif %}
-
-
-        <!-- Quick Links -->
-        <div class="quick-links" role="navigation" aria-label="Quick Links">
-            <button onclick="location.href='{{ url_for('submit_ticket') }}'" class="btn btn-success" aria-label="Submit a Ticket">
-                <i class="fas fa-plus-circle"></i> Submit a Ticket
-            </button>
-            <button onclick="location.href='{{ url_for('tickets') }}'" class="btn btn-primary" aria-label="View My Tickets">
-                <i class="fas fa-ticket-alt"></i> View My Tickets
-            </button>
-            <button onclick="location.href='/faq'" class="btn btn-info" aria-label="FAQ">
-                <i class="fas fa-question-circle"></i> FAQ
-            </button>
-        </div>
-
-        <!-- Announcements -->
-        <section class="announcements" aria-live="polite" aria-atomic="true" aria-relevant="additions removals">
-            <h2>Latest Announcements</h2>
-            <ul>
-                {% for announcement in announcements %}
-                    <li><strong>{{ announcement.date.strftime('%b %d, %Y') }}:</strong> {{ announcement.message }}</li>
-                {% else %}
-                    <li>No announcements at this time. Check back soon!</li>
-                {% endfor %}
-            </ul>
-        </section>
+    <div class="hamburger" onclick="toggleNav()" aria-label="Toggle navigation" role="button" tabindex="0">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        &copy; {{ current_year }} Apprentice Helpdesk. All rights reserved.
-    </footer>
+    <nav class="nav" id="navbar" aria-label="Primary Navigation">
+        <a href="/submit_ticket">Submit a Ticket</a>
+        <a href="/tickets">View Tickets</a>
+        {% if 'username' in session %}
+        {% if session['role'] == 'admin' %}
+        <a href="{{ url_for('admin_users') }}">Manage Users</a>
+        {% endif %}
+        <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
+        >
+        {% else %}
+        <a href="/login" class="btn btn-warning">Login</a>
+        {% endif %}
+    </nav>
+</header>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<!-- Main Welcome Content -->
+<div class="welcome-container" role="main">
+    <h1>Welcome to the Apprentice Helpdesk</h1>
+    <p>We’re here to assist you with all your queries and issues. Feel free to explore our help topics or submit a
+        ticket for personalised support.</p>
+
+    {% if 'username' in session %}
+    <p class="user-greeting">Hello, <strong>{{ session['username'] }}</strong>! </p>
+    {% endif %}
 
 
+    <!-- Quick Links -->
+    <div class="quick-links" role="navigation" aria-label="Quick Links">
+        <button onclick="location.href='{{ url_for('submit_ticket') }}'" class="btn btn-success"
+                aria-label="Submit a Ticket">
+            <i class="fas fa-plus-circle"></i> Submit a Ticket
+        </button>
+        <button onclick="location.href='{{ url_for('tickets') }}'" class="btn btn-primary" aria-label="View My Tickets">
+            <i class="fas fa-ticket-alt"></i> View My Tickets
+        </button>
+        <button onclick="location.href='/faq'" class="btn btn-info" aria-label="FAQ">
+            <i class="fas fa-question-circle"></i> FAQ
+        </button>
+    </div>
+
+    <!-- Announcements -->
+    <section class="announcements" aria-live="polite" aria-atomic="true" aria-relevant="additions removals">
+        <h2>Latest Announcements</h2>
+        <ul>
+            {% for announcement in announcements %}
+            <li><strong>{{ announcement.date.strftime('%b %d, %Y') }}:</strong> {{ announcement.message }}</li>
+            {% else %}
+            <li>No announcements at this time. Check back soon!</li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer>
+    &copy; {{ current_year }} Apprentice Helpdesk. All rights reserved.
+</footer>
 
 
-    <script>
-        // Toggle navigation menu for hamburger
-        function toggleNav() {
-            const nav = document.getElementById('navbar');
-            nav.classList.toggle('active');
-        }
+<script>
+    // Toggle navigation menu for hamburger
+    function toggleNav() {
+        const nav = document.getElementById('navbar');
+        nav.classList.toggle('active');
+    }
 
-        // Allow keyboard toggle on hamburger for accessibility
-        document.querySelector('.hamburger').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleNav();
-            }
-        });
-
-        // Handle quick search button click
-        document.getElementById('searchButton').addEventListener('click', function () {
-            const query = document.getElementById('searchInput').value.trim();
-            if (query) {
-                // Redirect to search results page or tickets filtered by search query
-                window.location.href = '/search?query=' + encodeURIComponent(query);
-            } else {
-                Swal.fire('Please enter a search term to continue.');
-            }
-        });
-
-        // Optional: enter key triggers search
-        document.getElementById('searchInput').addEventListener('keyup', function (event) {
-            if (event.key === 'Enter') {
-                document.getElementById('searchButton').click();
-            }
-        });
-
-  function confirmLogout() {
-    Swal.fire({
-        title: 'Are you sure you want to logout?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Logout'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = '{{ url_for("logout") }}';
+    // Allow keyboard toggle on hamburger for accessibility
+    document.querySelector('.hamburger').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleNav();
         }
     });
+
+    // Handle quick search button click
+    document.getElementById('searchButton').addEventListener('click', function () {
+        const query = document.getElementById('searchInput').value.trim();
+        if (query) {
+            // Redirect to search results page or tickets filtered by search query
+            window.location.href = '/search?query=' + encodeURIComponent(query);
+        } else {
+            Swal.fire('Please enter a search term to continue.');
+        }
+    });
+
+    // Optional: enter key triggers search
+    document.getElementById('searchInput').addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+            document.getElementById('searchButton').click();
+        }
+    });
+
+function confirmLogout() {
+Swal.fire({
+    title: 'Are you sure you want to logout?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Logout'
+}).then((result) => {
+    if (result.isConfirmed) {
+        window.location.href = '{{ url_for("logout") }}';
+    }
+});
 }
-    </script>
+</script>
 </body>
 
 </html>

@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 # Initialize Bcrypt (make sure your Flask app is available)
 bcrypt = Bcrypt()  # This assumes you have your Flask app context available
 
+
 def insert_users():
     conn = sqlite3.connect('helpdesk.db')
     cursor = conn.cursor()
@@ -64,6 +65,7 @@ def insert_tickets():
 
     conn.commit()
     conn.close()
+
 
 if __name__ == '__main__':
     insert_users()

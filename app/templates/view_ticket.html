@@ -290,7 +290,7 @@
 
 <body>
 
-   <header class="header">
+<header class="header">
     <a href="{{ url_for('home') }}">
         <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo">
     </a>
@@ -303,13 +303,13 @@
         <a href="/submit_ticket">Submit a Ticket</a>
         <a href="/tickets">View Tickets</a>
         {% if 'username' in session %}
-            {% if session['role'] == 'admin' %}
-                <a href="{{ url_for('admin_users') }}">Manage Users</a>
-            {% endif %}
-           <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
+        {% if session['role'] == 'admin' %}
+        <a href="{{ url_for('admin_users') }}">Manage Users</a>
+        {% endif %}
+        <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
 
         {% else %}
-            <a href="/login" class="btn btn-warning">Login</a>
+        <a href="/login" class="btn btn-warning">Login</a>
         {% endif %}
     </nav>
 </header>
@@ -319,11 +319,11 @@
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <ul class="flashes">
-            {% for category, message in messages %}
-            <li class="alert alert-{{ category }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
+    <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="alert alert-{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
     {% endwith %}
 
@@ -342,13 +342,13 @@
             <i class="fas fa-arrow-left"></i> Back to Tickets
         </a>
         {% if session['role'] != 'apprentice' %}
-            <a href="{{ url_for('edit_ticket', ticket_id=ticket.id) }}" class="btn btn-success">
-                <i class="fas fa-edit"></i> Edit Ticket
-            </a>
-            <button class="btn btn-danger"
+        <a href="{{ url_for('edit_ticket', ticket_id=ticket.id) }}" class="btn btn-success">
+            <i class="fas fa-edit"></i> Edit Ticket
+        </a>
+        <button class="btn btn-danger"
                 onclick="openModal({{ ticket.id }}, '{{ ticket.title }}')">
-                <i class="fas fa-trash"></i> Delete Ticket
-            </button>
+            <i class="fas fa-trash"></i> Delete Ticket
+        </button>
         {% endif %}
     </div>
 
@@ -360,7 +360,8 @@
                 <button class="close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete the ticket <strong id="modal-ticket-title"></strong>? This action cannot be undone.
+                Are you sure you want to delete the ticket <strong id="modal-ticket-title"></strong>? This action cannot
+                be undone.
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>

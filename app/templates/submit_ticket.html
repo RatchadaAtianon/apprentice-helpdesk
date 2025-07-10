@@ -1,238 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Submit a Ticket</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Submit a Ticket</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- Add this in your <head> section if not already present -->
-
-
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f6f9;
-      margin: 0;
-      padding: 0;
-    }
+    <!-- Add this in your <head> section if not already present -->
 
 
-    .btn {
-      border: none;
-      padding: 10px 16px;
-      font-weight: 600;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .btn-danger {
-      background-color: #dc3545;
-      color: #fff;
-    }
-
-    .btn-warning {
-      background-color: #ffc107;
-      color: #212529;
-    }
-
-    .btn-success {
-      background-color: #2d6a4f;
-      color: #fff;
-    }
-     .btn-success:hover {
-      background-color: #2d6a4f;
-      color: #fff;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 28px;
-      color: #232f3e;
-      margin-bottom: 25px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #333;
-    }
-
-    input[type="text"],
-    textarea,
-    select {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 15px;
-      box-sizing: border-box;
-    }
-
-    textarea {
-      resize: vertical;
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    .text-center button {
-      margin: 10px 5px;
-      min-width: 120px;
-    }
-
-    /* Modal styling */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-content {
-      background-color: #fff;
-      margin: 10% auto;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .modal-content .btn {
-      margin-top: 10px;
-      width: 100%;
-    }
-
-    .close {
-      float: right;
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-      color: #aaa;
-    }
-
-    .close:hover {
-      color: #000;
-    }
-
-    /* Responsive tweaks */
-    @media (max-width: 600px) {
-      .container {
-        margin: 20px;
-        padding: 20px;
-      }
-
-      .text-center button {
-        width: 100%;
-        margin: 10px 0;
-      }
+    <style>
+        body {
+          font-family: 'Segoe UI', sans-serif;
+          background-color: #f4f6f9;
+          margin: 0;
+          padding: 0;
+        }
 
 
+        .btn {
+          border: none;
+          padding: 10px 16px;
+          font-weight: 600;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+
+        .btn-danger {
+          background-color: #dc3545;
+          color: #fff;
+        }
+
+        .btn-warning {
+          background-color: #ffc107;
+          color: #212529;
+        }
+
+        .btn-success {
+          background-color: #2d6a4f;
+          color: #fff;
+        }
+         .btn-success:hover {
+          background-color: #2d6a4f;
+          color: #fff;
+        }
+
+        .container {
+          max-width: 600px;
+          margin: 40px auto;
+          background-color: #fff;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+          text-align: center;
+          font-size: 28px;
+          color: #232f3e;
+          margin-bottom: 25px;
+        }
+
+        .form-group {
+          margin-bottom: 20px;
+        }
+
+        label {
+          display: block;
+          font-weight: 600;
+          margin-bottom: 6px;
+          color: #333;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+          width: 100%;
+          padding: 10px 14px;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          font-size: 15px;
+          box-sizing: border-box;
+        }
+
+        textarea {
+          resize: vertical;
+        }
+
+        .text-center {
+          text-align: center;
+        }
+
+        .text-center button {
+          margin: 10px 5px;
+          min-width: 120px;
+        }
+
+        /* Modal styling */
+        .modal {
+          display: none;
+          position: fixed;
+          z-index: 999;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+          background-color: #fff;
+          margin: 10% auto;
+          padding: 20px;
+          border-radius: 10px;
+          width: 90%;
+          max-width: 400px;
+          text-align: center;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content .btn {
+          margin-top: 10px;
+          width: 100%;
+        }
+
+        .close {
+          float: right;
+          font-size: 24px;
+          font-weight: bold;
+          cursor: pointer;
+          color: #aaa;
+        }
+
+        .close:hover {
+          color: #000;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 600px) {
+          .container {
+            margin: 20px;
+            padding: 20px;
+          }
+
+          .text-center button {
+            width: 100%;
+            margin: 10px 0;
+          }
 
 
 
 
-      .bar {
-        width: 25px;
-        height: 3px;
-        background-color: white;
-        margin: 4px 0;
-      }
-    }
 
-    @media (min-width: 601px) {
-      .hamburger {
-        display: none;
-      }
-    }
-  </style>
+
+          .bar {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px 0;
+          }
+        }
+
+        @media (min-width: 601px) {
+          .hamburger {
+            display: none;
+          }
+        }
+    </style>
 </head>
 <body>
-  <header class="header">
+<header class="header">
     <a href="{{ url_for('home') }}">
-      <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo">
     </a>
     <div class="hamburger" onclick="toggleNav()">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
     </div>
     <nav class="nav" id="navbar">
-      <a href="/submit_ticket">Submit a Ticket</a>
-      <a href="/tickets">View Tickets</a>
-      {% if 'username' in session %}
+        <a href="/submit_ticket">Submit a Ticket</a>
+        <a href="/tickets">View Tickets</a>
+        {% if 'username' in session %}
         {% if session['role'] == 'admin' %}
-          <a href="{{ url_for('admin_users') }}">Manage Users</a>
+        <a href="{{ url_for('admin_users') }}">Manage Users</a>
         {% endif %}
-<a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
+        <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
 
-      {% else %}
+        {% else %}
         <a href="/login" class="btn btn-warning">Login</a>
-      {% endif %}
+        {% endif %}
     </nav>
-  </header>
+</header>
 
-  <div class="container">
+<div class="container">
     <h1><i class="fas fa-ticket-alt"></i> Submit Ticket</h1>
     <form id="submitTicketForm" action="/submit_ticket" method="POST">
-      <div class="form-group">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required />
-      </div>
-      <div class="form-group">
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" rows="4" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="priority">Priority:</label>
-        <select id="priority" name="priority" required>
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
-        </select>
-      </div>
-      <div class="text-center">
-        <button type="button" class="btn btn-success" onclick="validateAndOpenModal()">Submit Ticket</button>
-        <button type="button" class="btn btn-danger" onclick="confirmCancel()">Cancel</button>
-      </div>
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required/>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select id="priority" name="priority" required>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+        </div>
+        <div class="text-center">
+            <button type="button" class="btn btn-success" onclick="validateAndOpenModal()">Submit Ticket</button>
+            <button type="button" class="btn btn-danger" onclick="confirmCancel()">Cancel</button>
+        </div>
     </form>
-  </div>
+</div>
 
-  <!-- Modal -->
-  <div id="confirmUpdateModal" class="modal">
+<!-- Modal -->
+<div id="confirmUpdateModal" class="modal">
     <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <p>Are you sure you want to submit this ticket?</p>
-      <button type="button" class="btn btn-success" onclick="submitTicket()">Yes, Submit</button>
-      <button type="button" class="btn btn-danger" onclick="closeModal()">Cancel</button>
+        <span class="close" onclick="closeModal()">&times;</span>
+        <p>Are you sure you want to submit this ticket?</p>
+        <button type="button" class="btn btn-success" onclick="submitTicket()">Yes, Submit</button>
+        <button type="button" class="btn btn-danger" onclick="closeModal()">Cancel</button>
     </div>
-  </div>
+</div>
 
-  <script>
+<script>
     function toggleNav() {
       const navbar = document.getElementById('navbar');
       navbar.classList.toggle('active');
@@ -322,6 +322,6 @@ function validateAndOpenModal() {
         }
     });
 }
-  </script>
+</script>
 </body>
 </html>

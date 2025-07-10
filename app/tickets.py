@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for, session, flash
 from app import app
 from app.db import get_db_connection, get_user_id, get_ticket_by_id
 
+
 def login_required(f):
     from functools import wraps
     from flask import redirect, url_for, flash
@@ -12,7 +13,9 @@ def login_required(f):
             flash('You need to log in to view this page.', 'error')
             return redirect(url_for('login'))
         return f(*args, **kwargs)
+
     return decorated_function
+
 
 def admin_required(f):
     from functools import wraps
@@ -24,7 +27,9 @@ def admin_required(f):
             flash('You do not have permission to view this page.', 'error')
             return redirect(url_for('home'))
         return f(*args, **kwargs)
+
     return decorated_function
+
 
 @app.route('/tickets')
 @login_required
@@ -64,6 +69,7 @@ def tickets():
 
     return render_template('tickets.html', tickets=tickets)
 
+
 @app.route('/submit_ticket', methods=['GET', 'POST'])
 @login_required
 def submit_ticket():
@@ -84,6 +90,7 @@ def submit_ticket():
 
     return render_template('submit_ticket.html')
 
+
 @app.route('/view_ticket/<int:ticket_id>')
 @login_required
 def view_ticket(ticket_id):
@@ -92,6 +99,7 @@ def view_ticket(ticket_id):
         flash("Ticket not found!", "error")
         return redirect(url_for('tickets'))
     return render_template('view_ticket.html', ticket=ticket)
+
 
 @app.route('/edit_ticket/<int:ticket_id>', methods=['GET', 'POST'])
 @login_required
@@ -119,6 +127,7 @@ def edit_ticket(ticket_id):
 
     return render_template('edit_ticket.html', ticket=ticket)
 
+
 @app.route('/delete_ticket/<int:ticket_id>', methods=['POST'])
 def delete_ticket(ticket_id):
     if 'username' not in session or session.get('role') != 'admin':
@@ -138,4 +147,3 @@ def delete_ticket(ticket_id):
 
     flash(f"Ticket '{ticket['title']}' has been deleted.", 'success')
     return redirect(url_for('tickets'))
-

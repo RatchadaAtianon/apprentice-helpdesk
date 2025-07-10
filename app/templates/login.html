@@ -1,307 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login & Register</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login & Register</title>
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 
-  <!-- Font Awesome for eye icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <!-- Font Awesome for eye icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-  <style>
-      * {
+    <style>
+        * {
 
- font-family: Consolas, Monaco, monospace;
-}
-    body, html {
-      height: 100%;
-      margin: 0;
+   font-family: Consolas, Monaco, monospace;
+  }
+      body, html {
+        height: 100%;
+        margin: 0;
 
-      background-color: #f0f2f5;
-      transition: background-color 0.6s ease-in-out;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 40px;
-      background-color: #232f3e;
-      color: white;
-      border-bottom: 3px solid #ffa500;
-    }
-
-    .header img {
-      max-width: 120px;
-    }
-
-    .auth-container {
-      width: 800px;
-      height: 500px;
-      margin: 50px auto 0;
-      display: flex;
-      background-color: white;
-      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-      transition: background-color 0.6s ease-in-out;
-    }
-
-    .form-container {
-      width: 50%;
-      padding: 40px;
-      transition: all 0.6s ease-in-out;
-    }
-
-    .login-container,
-    .register-container {
-      background-color: #f8f9fa;
-    }
-
-    .form-container form {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .form-container input {
-      margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ddd;
-    }
-
-    .form-container button {
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: #232F3E;
-      color: white;
-    }
-
-    .switch-overlay {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 50%;
-      height: 100%;
-      background-color: #ffa500;
-      transition: all 0.6s ease-in-out;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .switch-overlay.active {
-      left: 0;
-     background-color: #ffa500;
-    }
-
-    .custom-alert {
-      border-radius: 8px;
-      font-size: 16px;
-      padding: 15px 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      background-color: #fff;
-      border-left: 5px solid #dc3545;
-      color: #721c24;
-      transition: opacity 0.5s ease-in-out;
-    }
-
-    .alert-danger {
-      background-color: #f8d7da;
-      border-color: #f5c6cb;
-      color: #721c24;
-    }
-
-    .password-wrapper {
-      position: relative;
-    }
-
-    .password-wrapper input {
-      width: 100%;
-      padding-right: 40px;
-    }
-
-    .toggle-password {
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      cursor: pointer;
-      color: #888;
-    }
-
-    @media (max-width: 768px) {
-      .auth-container {
-        flex-direction: column;
-        width: 95%;
-        height: auto;
-        margin-top: 20px;
-      }
-
-      .form-container {
-        width: 100%;
-        padding: 30px 20px;
-        display: none;
-      }
-
-      .form-container.active {
-        display: block;
-      }
-
-      .switch-overlay {
-        position: relative;
-        width: 100%;
-        height: auto;
-        left: 0;
-        top: 0;
-        transform: none;
-        padding: 15px;
-        font-size: clamp(18px, 4vw, 22px);
-        border-top: 1px solid #ccc;
-        border-radius: 0 0 10px 10px;
-        background-color: #ffa500;
-        color: white;
+        background-color: #f0f2f5;
+        transition: background-color 0.6s ease-in-out;
       }
 
       .header {
-        flex-direction: column;
-        text-align: center;
-        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px;
+        background-color: #232f3e;
+        color: white;
+        border-bottom: 3px solid #ffa500;
       }
 
       .header img {
-        max-width: 100px;
-
+        max-width: 120px;
       }
 
-      .hamburger {
-        margin-top: 10px;
+      .auth-container {
+        width: 800px;
+        height: 500px;
+        margin: 50px auto 0;
+        display: flex;
+        background-color: white;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        transition: background-color 0.6s ease-in-out;
       }
-    }
-  </style>
+
+      .form-container {
+        width: 50%;
+        padding: 40px;
+        transition: all 0.6s ease-in-out;
+      }
+
+      .login-container,
+      .register-container {
+        background-color: #f8f9fa;
+      }
+
+      .form-container form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-container input {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+
+      .form-container button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #232F3E;
+        color: white;
+      }
+
+      .switch-overlay {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 50%;
+        height: 100%;
+        background-color: #ffa500;
+        transition: all 0.6s ease-in-out;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .switch-overlay.active {
+        left: 0;
+       background-color: #ffa500;
+      }
+
+      .custom-alert {
+        border-radius: 8px;
+        font-size: 16px;
+        padding: 15px 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        background-color: #fff;
+        border-left: 5px solid #dc3545;
+        color: #721c24;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+      }
+
+      .password-wrapper {
+        position: relative;
+      }
+
+      .password-wrapper input {
+        width: 100%;
+        padding-right: 40px;
+      }
+
+      .toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #888;
+      }
+
+      @media (max-width: 768px) {
+        .auth-container {
+          flex-direction: column;
+          width: 95%;
+          height: auto;
+          margin-top: 20px;
+        }
+
+        .form-container {
+          width: 100%;
+          padding: 30px 20px;
+          display: none;
+        }
+
+        .form-container.active {
+          display: block;
+        }
+
+        .switch-overlay {
+          position: relative;
+          width: 100%;
+          height: auto;
+          left: 0;
+          top: 0;
+          transform: none;
+          padding: 15px;
+          font-size: clamp(18px, 4vw, 22px);
+          border-top: 1px solid #ccc;
+          border-radius: 0 0 10px 10px;
+          background-color: #ffa500;
+          color: white;
+        }
+
+        .header {
+          flex-direction: column;
+          text-align: center;
+          padding: 20px;
+        }
+
+        .header img {
+          max-width: 100px;
+
+        }
+
+        .hamburger {
+          margin-top: 10px;
+        }
+      }
+    </style>
 </head>
 <body>
 
 <!-- Header -->
 <header class="header">
-  <a href="{{ url_for('home') }}">
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo" />
-  </a>
-  <div class="hamburger" onclick="toggleNav()">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-  </div>
+    <a href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Helpdesk Logo"/>
+    </a>
+    <div class="hamburger" onclick="toggleNav()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
 </header>
 
 <!-- Flash messages -->
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
-  <div class="container mt-4">
+<div class="container mt-4">
     {% for category, message in messages %}
-      <div class="alert alert-{{ category }} alert-dismissible fade show custom-alert" role="alert">
+    <div class="alert alert-{{ category }} alert-dismissible fade show custom-alert" role="alert">
         <i class="fas fa-exclamation-circle mr-2"></i> {{ message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
         </button>
-      </div>
+    </div>
     {% endfor %}
-  </div>
+</div>
 {% endif %}
 {% endwith %}
 
 <!-- Auth Container -->
 <div class="auth-container" id="authContainer">
 
-  <!-- Login -->
-  <div class="form-container login-container active" id="loginContainer">
-    <h2>Login</h2>
-    <form action="/login" method="POST">
-      <input type="text" id="username" name="username" placeholder="Username" required />
-      <div class="password-wrapper">
-        <input type="password" id="password" name="password" placeholder="Password" required />
-        <i class="fa fa-eye toggle-password" onclick="togglePassword(this, 'password')"></i>
-      </div>
-      <button type="submit">Login</button>
-    </form>
-  </div>
+    <!-- Login -->
+    <div class="form-container login-container active" id="loginContainer">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+            <input type="text" id="username" name="username" placeholder="Username" required/>
+            <div class="password-wrapper">
+                <input type="password" id="password" name="password" placeholder="Password" required/>
+                <i class="fa fa-eye toggle-password" onclick="togglePassword(this, 'password')"></i>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 
-  <!-- Register -->
-  <div class="form-container register-container" id="registerContainer">
-    <h2>Register</h2>
-    <form id="registerForm" action="/register" method="POST" onsubmit="return validateForm()">
-      <input type="text" id="regUsername" name="username" placeholder="Username"
-        pattern="^[a-zA-Z0-9]{8,16}$"
-        title="Username must be 8-16 characters with no special characters" required />
-      <input type="email" id="email" name="email" placeholder="Email" required />
-      <div class="password-wrapper">
-        <input type="password" id="regPassword" name="password" placeholder="Password" required />
-        <i class="fa fa-eye toggle-password" onclick="togglePassword(this, 'regPassword')"></i>
-      </div>
-      <button type="submit">Register</button>
-    </form>
-  </div>
+    <!-- Register -->
+    <div class="form-container register-container" id="registerContainer">
+        <h2>Register</h2>
+        <form id="registerForm" action="/register" method="POST" onsubmit="return validateForm()">
+            <input type="text" id="regUsername" name="username" placeholder="Username"
+                   pattern="^[a-zA-Z0-9]{8,16}$"
+                   title="Username must be 8-16 characters with no special characters" required/>
+            <input type="email" id="email" name="email" placeholder="Email" required/>
+            <div class="password-wrapper">
+                <input type="password" id="regPassword" name="password" placeholder="Password" required/>
+                <i class="fa fa-eye toggle-password" onclick="togglePassword(this, 'regPassword')"></i>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
 
-  <!-- Switch Overlay -->
-  <div class="switch-overlay" id="switchOverlay" onclick="switchForms()">Register</div>
+    <!-- Switch Overlay -->
+    <div class="switch-overlay" id="switchOverlay" onclick="switchForms()">Register</div>
 </div>
 
 <!-- Scripts -->
 <script>
-  function switchForms() {
-    const loginContainer = document.getElementById('loginContainer');
-    const registerContainer = document.getElementById('registerContainer');
-    const switchOverlay = document.getElementById('switchOverlay');
+    function switchForms() {
+      const loginContainer = document.getElementById('loginContainer');
+      const registerContainer = document.getElementById('registerContainer');
+      const switchOverlay = document.getElementById('switchOverlay');
 
-    if (window.innerWidth <= 768) {
-      loginContainer.classList.toggle('active');
-      registerContainer.classList.toggle('active');
+      if (window.innerWidth <= 768) {
+        loginContainer.classList.toggle('active');
+        registerContainer.classList.toggle('active');
+      }
+
+      switchOverlay.classList.toggle('active');
+      switchOverlay.textContent = switchOverlay.textContent === 'Login' ? 'Register' : 'Login';
     }
 
-    switchOverlay.classList.toggle('active');
-    switchOverlay.textContent = switchOverlay.textContent === 'Login' ? 'Register' : 'Login';
-  }
-
-  function togglePassword(icon, inputId) {
-    const input = document.getElementById(inputId);
-    if (input.type === "password") {
-      input.type = "text";
-      icon.classList.remove("fa-eye");
-      icon.classList.add("fa-eye-slash");
-    } else {
-      input.type = "password";
-      icon.classList.remove("fa-eye-slash");
-      icon.classList.add("fa-eye");
-    }
-  }
-
-  function validateForm() {
-    const username = document.getElementById('regUsername').value;
-    const password = document.getElementById('regPassword').value;
-    const usernamePattern = /^[a-zA-Z0-9]{8,16}$/;
-
-    if (!usernamePattern.test(username)) {
-      alert('Username must be 8-16 characters long and contain no special characters.');
-      return false;
+    function togglePassword(icon, inputId) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
     }
 
-    if (password.length < 8) {
-      alert('Password must be at least 8 characters long.');
-      return false;
-    }
+    function validateForm() {
+      const username = document.getElementById('regUsername').value;
+      const password = document.getElementById('regPassword').value;
+      const usernamePattern = /^[a-zA-Z0-9]{8,16}$/;
 
-    return true;
-  }
+      if (!usernamePattern.test(username)) {
+        alert('Username must be 8-16 characters long and contain no special characters.');
+        return false;
+      }
+
+      if (password.length < 8) {
+        alert('Password must be at least 8 characters long.');
+        return false;
+      }
+
+      return true;
+    }
 </script>
 
 <!-- jQuery and Bootstrap JS -->

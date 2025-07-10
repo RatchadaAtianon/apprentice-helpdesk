@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for, session, flash
 from app import app
 from app.db import get_db_connection
 
+
 def admin_required(f):
     from functools import wraps
     from flask import abort
@@ -17,7 +18,9 @@ def admin_required(f):
         if not user or user['role'] != 'admin':
             abort(403)
         return f(*args, **kwargs)
+
     return decorated_function
+
 
 @app.route('/admin_users')
 @admin_required
@@ -30,6 +33,7 @@ def admin_users():
         users = conn.execute('SELECT * FROM users').fetchall()
     conn.close()
     return render_template('admin_users.html', users=users, role=role_filter)
+
 
 @app.route('/admin/users/edit/<int:user_id>', methods=['GET', 'POST'])
 @admin_required
@@ -51,6 +55,7 @@ def edit_user(user_id):
     user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     conn.close()
     return render_template('edit_user.html', user=user)
+
 
 @app.route('/admin/users/delete/<int:user_id>', methods=['POST'])
 @admin_required

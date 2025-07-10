@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def init_db():
     conn = sqlite3.connect('helpdesk.db')
     cursor = conn.cursor()
@@ -35,6 +36,7 @@ def init_db():
 
     conn.commit()
     conn.close()
+
 
 if __name__ == '__main__':
     init_db()

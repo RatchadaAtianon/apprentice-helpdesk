@@ -1,5 +1,6 @@
 from app import app
 
+
 @app.route('/')
 def home():
     from flask import session, render_template, redirect, url_for
@@ -11,6 +12,7 @@ def home():
 
 
 from flask import render_template
+
 
 @app.route("/faq")
 def faq():
