@@ -374,9 +374,9 @@ table.table tbody td .btn {
 }
 
 table.table tbody td .btn-warning {
-  background-color: #ffc107;
+  background-color: #F4A261;
   border-color: #ffc107;
-  color: #212529;
+  color: white;
 }
 
 table.table tbody td .btn-warning:hover {
@@ -385,7 +385,7 @@ table.table tbody td .btn-warning:hover {
 }
 
 table.table tbody td .btn-danger {
-  background-color: #dc3545;
+  background-color: #e63946;
   border-color: #dc3545;
   color: white;
 }

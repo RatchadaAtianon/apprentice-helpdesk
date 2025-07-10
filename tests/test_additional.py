@@ -16,7 +16,7 @@ class AdditionalTests(unittest.TestCase):
         self.app_context = app.app_context()
         self.app_context.push()
 
-        # Initialize Bcrypt
+        # Initialise Bcrypt
         self.bcrypt = Bcrypt(app)
 
         # Set up test database
