@@ -214,12 +214,13 @@
 <!-- Main Welcome Content -->
 <div class="welcome-container" role="main">
     <h1>Welcome to the Apprentice Helpdesk</h1>
+       {% if 'username' in session %}
+    <p class="user-greeting">Hello, <strong>{{ session['username'] }}</strong>! </p>
+    {% endif %}
     <p>We’re here to assist you with all your queries and issues. Feel free to explore our help topics or submit a
         ticket for personalised support.</p>
 
-    {% if 'username' in session %}
-    <p class="user-greeting">Hello, <strong>{{ session['username'] }}</strong>! </p>
-    {% endif %}
+
 
 
     <!-- Quick Links -->

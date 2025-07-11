@@ -44,6 +44,7 @@ FLASK_ENV=development
 SECRET_KEY=your_secret_key
 ```
 ## 5. Create tables, insert test data
+This is where all user data lives so if you want to login then use user data from insert_data.py
 ```bash
 python3 create_tables.py
 python3 insert_data.py
@@ -52,4 +53,10 @@ python3 insert_data.py
 ## 6. Run Application
 ```bash
 python3 main.py
+```
+## 7. Run tests and see coverage
+
+```bash
+coverage run -m pytest                                             
+coverage report -m
 ```

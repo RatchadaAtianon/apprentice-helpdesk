@@ -232,7 +232,10 @@
                 <input type="password" id="password" name="password" placeholder="Password" required/>
                 <i class="fa fa-eye toggle-password" onclick="togglePassword(this, 'password')"></i>
             </div>
+
             <button type="submit">Login</button>
+
+
         </form>
     </div>
 
@@ -245,9 +248,19 @@
                    title="Username must be 8-16 characters with no special characters" required/>
             <input type="email" id="email" name="email" placeholder="Email" required/>
             <div class="password-wrapper">
-                <input type="password" id="regPassword" name="password" placeholder="Password" required/>
+                <input type="password" id="regPassword" name="password" placeholder="Password"
+                       pattern=".{8,}" title="Password must be at least 8 characters long" required/>
+
                 <i class="fa fa-eye toggle-password" onclick="togglePassword(this, 'regPassword')"></i>
             </div>
+            <div class="password-wrapper">
+
+                <input type="password" id="confirmPassword" name="confirm_password" placeholder="Confirm Password"
+                       oninput="this.setCustomValidity(this.value !== document.getElementById('regPassword').value ? 'Passwords do not match.' : '')"
+                       title="Passwords must match" required/>
+                <i class="fa fa-eye toggle-password" onclick="togglePassword(this, 'confirmPassword')"></i>
+            </div>
+
             <button type="submit">Register</button>
         </form>
     </div>
@@ -300,7 +313,12 @@
         return false;
       }
 
+
       return true;
+         if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return false;
+    }
     }
 </script>
 
