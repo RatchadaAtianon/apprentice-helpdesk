@@ -36,33 +36,44 @@ def admin_required(f):
 def tickets():
     conn = get_db_connection()
 
-    if session.get('role') == 'admin':
-        query = '''
-            SELECT tickets.*, users.username
-            FROM tickets
-            JOIN users ON tickets.user_id = users.id
-            WHERE 1=1
-        '''
-        params = []
-    else:
-        user_id = get_user_id(session['username'])
-        query = '''
-            SELECT tickets.*, users.username
-            FROM tickets
-            JOIN users ON tickets.user_id = users.id
-            WHERE tickets.user_id = ?
-        '''
-        params = [user_id]
+    # Base query + join so we can filter by username and show it in the template
+    query = '''
+        SELECT
+            tickets.*,
+            users.username,
+            users.id AS apprentice_id
+        FROM tickets
+        JOIN users ON tickets.user_id = users.id
+        WHERE 1=1
+    '''
+    params = []
 
-    status_filter = request.args.get('status')
+    # Restrict non-admins to their own tickets
+    if session.get('role') != 'admin':
+        query += ' AND tickets.user_id = ?'
+        params.append(get_user_id(session['username']))
+
+    # Filters from the query string (?priority=High&status=open&apprentice_name=...&apprentice_id=...)
+    status_filter = (request.args.get('status') or '').strip()
     if status_filter:
         query += ' AND tickets.status = ?'
         params.append(status_filter)
 
-    priority_filter = request.args.get('priority')
+    priority_filter = (request.args.get('priority') or '').strip()
     if priority_filter:
         query += ' AND tickets.priority = ?'
         params.append(priority_filter)
+
+    apprentice_name = (request.args.get('apprentice_name') or '').strip()
+    if apprentice_name:
+        # case-insensitive partial match
+        query += ' AND LOWER(users.username) LIKE ?'
+        params.append(f"%{apprentice_name.lower()}%")
+
+
+
+    # Order newest first (use created_at if you have it; fall back to id)
+    query += ' ORDER BY tickets.id DESC'
 
     tickets = conn.execute(query, params).fetchall()
     conn.close()

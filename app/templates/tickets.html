@@ -11,11 +11,14 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
     <style>
         div.form-row {
             display: block;
             align-items: center;
+        }
+        /* Optional: compact inputs on small screens */
+        .form-group input, .form-group select {
+            width: 100%;
         }
     </style>
 </head>
@@ -38,7 +41,6 @@
         <a href="{{ url_for('admin_users') }}">Manage Users</a>
         {% endif %}
         <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
-
         {% else %}
         <a href="/login" class="btn btn-warning">Login</a>
         {% endif %}
@@ -68,16 +70,17 @@
         </a>
     </div>
 
-    <!-- Filter Form -->
+    <!-- Filter / Search Form -->
     <div class="container d-flex justify-content-center">
         <div class="w-100" style="max-width: 1100px;">
             <form method="GET" action="/tickets" class="text-center">
                 <div class="form-row justify-content-center">
-                    <div class="form-group col-12 col-md-4">
+                    <!-- Priority -->
+                    <div class="form-group col-12 col-md-3">
                         <label for="priority">Filter by Priority:</label>
                         <select id="priority" name="priority" class="form-control mx-auto">
                             <option value="" {% if request.args.get(
-                            'priority') == '' %}selected{% endif %}>All</option>
+                            'priority','') == '' %}selected{% endif %}>All</option>
                             <option value="High" {% if request.args.get(
                             'priority') == 'High' %}selected{% endif %}>High</option>
                             <option value="Medium" {% if request.args.get(
@@ -85,15 +88,14 @@
                             <option value="Low" {% if request.args.get(
                             'priority') == 'Low' %}selected{% endif %}>Low</option>
                         </select>
-
                     </div>
 
-
-                    <div class="form-group col-12 col-md-4">
+                    <!-- Status -->
+                    <div class="form-group col-12 col-md-3">
                         <label for="status">Filter by Status:</label>
                         <select id="status" name="status" class="form-control mx-auto">
                             <option value="" {% if request.args.get(
-                            'status') == '' %}selected{% endif %}>All</option>
+                            'status','') == '' %}selected{% endif %}>All</option>
                             <option value="open" {% if request.args.get(
                             'status') == 'open' %}selected{% endif %}>Open</option>
                             <option value="closed" {% if request.args.get(
@@ -101,8 +103,26 @@
                             <option value="in_progress" {% if request.args.get(
                             'status') == 'in_progress' %}selected{% endif %}>In Progress</option>
                         </select>
-
                     </div>
+
+
+                    <!-- 🔎 New: Search by Apprentice Name -->
+                    {% if 'username' in session and session['role'] == 'admin' %}
+                    <div class="form-group col-12 col-md-3">
+                        <label for="apprentice_name">Apprentice Name:</label>
+                        <input
+                                type="text"
+                                id="apprentice_name"
+                                name="apprentice_name"
+                                class="form-control"
+                                placeholder="e.g., Alex Smith"
+                                value="{{ request.args.get('apprentice_name','') }}">
+                    </div>
+                    {% endif %}
+
+
+                    <!-- 🆔 New: Search by Apprentice ID -->
+
                 </div>
 
                 <div class="form-row justify-content-center mt-3">
@@ -134,11 +154,15 @@
                 <p class="card-text">
                     <i class="fas fa-flag"></i> Priority:
                     <span class="badge badge-{{ 'danger' if ticket['priority'] == 'High' else 'warning' if ticket['priority'] == 'Medium' else 'success' }}">
-                                    {{ ticket['priority'] }}
-                                </span>
+                        {{ ticket['priority'] }}
+                    </span>
                 </p>
                 <p class="card-text"><i class="fas fa-info-circle"></i> Status: {{ ticket['status'] }}</p>
                 <p class="card-text"><i class="fas fa-calendar-alt"></i> Submitted: {{ ticket['created_at'] }}</p>
+                {% if session['role'] != 'apprentice' %}
+                <p class="card-text"><i class="fas fa-user"></i> Apprentice: {{ ticket['username'] }}{% if
+                    ticket['apprentice_id'] %}{% endif %}</p>
+                {% endif %}
             </div>
             {% if session['role'] != 'apprentice' %}
             <div class="card-footer">
@@ -179,19 +203,20 @@
 <!-- JavaScript Section -->
 <script>
     function confirmLogout() {
-Swal.fire({
-    title: 'Are you sure you want to logout?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#dc3545',
-    cancelButtonColor: '#6c757d',
-    confirmButtonText: 'Logout'
-}).then((result) => {
-    if (result.isConfirmed) {
-        window.location.href = '{{ url_for("logout") }}';
+        Swal.fire({
+            title: 'Are you sure you want to logout?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Logout'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '{{ url_for("logout") }}';
+            }
+        });
     }
-});
-}
+
     function openModal(ticketId, ticketTitle) {
         document.getElementById('modal-ticket-title').innerText = ticketTitle;
         document.getElementById('modal-ticket-id').value = ticketId;
@@ -211,11 +236,17 @@ Swal.fire({
     }
 
     $(document).ready(function () {
+        // Auto-hide flash messages
         setTimeout(function () {
             $(".flashes").fadeOut("slow", function () {
                 $(this).remove();
             });
         }, 3000);
+
+        // Prevent non-numeric characters in Apprentice ID (optional UX enhancement)
+        $('#apprentice_id').on('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
     });
 </script>
 </body>
