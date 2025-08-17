@@ -19,7 +19,6 @@ def login_required(f):
 
 def admin_required(f):
     from functools import wraps
-    from flask import abort
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -36,10 +35,7 @@ def admin_required(f):
 def tickets():
     conn = get_db_connection()
 
-<<<<<<< HEAD
     # Base query + join so we can filter by username and show it in the template
-=======
->>>>>>> 231d8bf (feat(tickets): search tickets by apprentice name or ID)
     query = '''
         SELECT
             tickets.*,
@@ -51,24 +47,14 @@ def tickets():
     '''
     params = []
 
-<<<<<<< HEAD
-    # Restrict non-admins to their own tickets
-    if session.get('role') != 'admin':
-        query += ' AND tickets.user_id = ?'
-        params.append(get_user_id(session['username']))
-
-    # Filters from the query string (?priority=High&status=open&apprentice_name=...&apprentice_id=...)
-=======
     is_admin = (session.get('role') == 'admin')
 
     # Restrict non-admins to their own tickets
     if not is_admin:
-        user_id = get_user_id(session['username'])
         query += ' AND tickets.user_id = ?'
-        params.append(user_id)
+        params.append(get_user_id(session['username']))
 
     # Common filters
->>>>>>> 231d8bf (feat(tickets): search tickets by apprentice name or ID)
     status_filter = (request.args.get('status') or '').strip()
     if status_filter:
         query += ' AND tickets.status = ?'
@@ -79,21 +65,11 @@ def tickets():
         query += ' AND tickets.priority = ?'
         params.append(priority_filter)
 
-<<<<<<< HEAD
-    apprentice_name = (request.args.get('apprentice_name') or '').strip()
-    if apprentice_name:
-        # case-insensitive partial match
-        query += ' AND LOWER(users.username) LIKE ?'
-        params.append(f"%{apprentice_name.lower()}%")
-
-
-
-    # Order newest first (use created_at if you have it; fall back to id)
-=======
-    # ✅ Admin-only filters
+    # Admin-only filters
     if is_admin:
         apprentice_name = (request.args.get('apprentice_name') or '').strip()
         if apprentice_name:
+            # case-insensitive partial match
             query += ' AND LOWER(users.username) LIKE ?'
             params.append(f"%{apprentice_name.lower()}%")
 
@@ -104,15 +80,16 @@ def tickets():
                 params.append(int(apprentice_id))
             else:
                 flash('Apprentice ID must be numeric.', 'warning')
-                # (no ID filter applied)
+                # (No ID filter applied)
 
->>>>>>> 231d8bf (feat(tickets): search tickets by apprentice name or ID)
+    # Order newest first (use created_at if available)
     query += ' ORDER BY tickets.id DESC'
 
     tickets = conn.execute(query, params).fetchall()
     conn.close()
 
     return render_template('tickets.html', tickets=tickets)
+
 
 @app.route('/submit_ticket', methods=['GET', 'POST'])
 @login_required
@@ -124,8 +101,10 @@ def submit_ticket():
         user_id = get_user_id(session['username'])
 
         conn = get_db_connection()
-        conn.execute('INSERT INTO tickets (user_id, title, description, priority, status) VALUES (?, ?, ?, ?, ?)',
-                     (user_id, title, description, priority, 'open'))
+        conn.execute(
+            'INSERT INTO tickets (user_id, title, description, priority, status) VALUES (?, ?, ?, ?, ?)',
+            (user_id, title, description, priority, 'open')
+        )
         conn.commit()
         conn.close()
 
@@ -159,25 +138,26 @@ def edit_ticket(ticket_id):
 
         if not title or not description:
             flash('Title and description are required!', 'error')
+            conn.close()
             return redirect(url_for('edit_ticket', ticket_id=ticket_id))
 
-        conn.execute('UPDATE tickets SET title = ?, description = ?, priority = ?, status = ? WHERE id = ?',
-                     (title, description, priority, status, ticket_id))
+        conn.execute(
+            'UPDATE tickets SET title = ?, description = ?, priority = ?, status = ? WHERE id = ?',
+            (title, description, priority, status, ticket_id)
+        )
         conn.commit()
         conn.close()
 
         flash('Ticket updated successfully!', 'success')
         return redirect(url_for('tickets'))
 
+    conn.close()
     return render_template('edit_ticket.html', ticket=ticket)
 
 
 @app.route('/delete_ticket/<int:ticket_id>', methods=['POST'])
+@admin_required
 def delete_ticket(ticket_id):
-    if 'username' not in session or session.get('role') != 'admin':
-        flash('You do not have permission to perform this action.', 'error')
-        return redirect(url_for('home'))
-
     conn = get_db_connection()
     ticket = conn.execute('SELECT * FROM tickets WHERE id = ?', (ticket_id,)).fetchone()
     if not ticket:
