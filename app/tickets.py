@@ -36,7 +36,10 @@ def admin_required(f):
 def tickets():
     conn = get_db_connection()
 
+<<<<<<< HEAD
     # Base query + join so we can filter by username and show it in the template
+=======
+>>>>>>> 231d8bf (feat(tickets): search tickets by apprentice name or ID)
     query = '''
         SELECT
             tickets.*,
@@ -48,12 +51,24 @@ def tickets():
     '''
     params = []
 
+<<<<<<< HEAD
     # Restrict non-admins to their own tickets
     if session.get('role') != 'admin':
         query += ' AND tickets.user_id = ?'
         params.append(get_user_id(session['username']))
 
     # Filters from the query string (?priority=High&status=open&apprentice_name=...&apprentice_id=...)
+=======
+    is_admin = (session.get('role') == 'admin')
+
+    # Restrict non-admins to their own tickets
+    if not is_admin:
+        user_id = get_user_id(session['username'])
+        query += ' AND tickets.user_id = ?'
+        params.append(user_id)
+
+    # Common filters
+>>>>>>> 231d8bf (feat(tickets): search tickets by apprentice name or ID)
     status_filter = (request.args.get('status') or '').strip()
     if status_filter:
         query += ' AND tickets.status = ?'
@@ -64,6 +79,7 @@ def tickets():
         query += ' AND tickets.priority = ?'
         params.append(priority_filter)
 
+<<<<<<< HEAD
     apprentice_name = (request.args.get('apprentice_name') or '').strip()
     if apprentice_name:
         # case-insensitive partial match
@@ -73,13 +89,30 @@ def tickets():
 
 
     # Order newest first (use created_at if you have it; fall back to id)
+=======
+    # ✅ Admin-only filters
+    if is_admin:
+        apprentice_name = (request.args.get('apprentice_name') or '').strip()
+        if apprentice_name:
+            query += ' AND LOWER(users.username) LIKE ?'
+            params.append(f"%{apprentice_name.lower()}%")
+
+        apprentice_id = (request.args.get('apprentice_id') or '').strip()
+        if apprentice_id:
+            if apprentice_id.isdigit():
+                query += ' AND users.id = ?'
+                params.append(int(apprentice_id))
+            else:
+                flash('Apprentice ID must be numeric.', 'warning')
+                # (no ID filter applied)
+
+>>>>>>> 231d8bf (feat(tickets): search tickets by apprentice name or ID)
     query += ' ORDER BY tickets.id DESC'
 
     tickets = conn.execute(query, params).fetchall()
     conn.close()
 
     return render_template('tickets.html', tickets=tickets)
-
 
 @app.route('/submit_ticket', methods=['GET', 'POST'])
 @login_required
