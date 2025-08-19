@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Welcome to Helpdesk</title>
+  <title>Admin — Helpdesk</title>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
@@ -14,15 +14,8 @@
     .welcome-container{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 160px);background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.1);margin:20px auto;max-width:1200px;padding:60px;border-radius:12px;text-align:center}
     h1{font-size:clamp(28px,5vw,48px);line-height:1.2}
     p{font-size:18px;color:#495057;margin-top:15px;max-width:800px}
-    .quick-search{margin-top:30px;display:flex;justify-content:center;gap:10px;max-width:600px;width:100%}
-    #searchInput{flex:1;padding:10px 15px;font-size:16px;border:1.5px solid #ccc;border-radius:8px 0 0 8px;outline:none;transition:border-color .3s}
-    #searchInput:focus{border-color:#232f3e}
-    #searchButton{background:#232f3e;border:none;color:#fff;padding:0 20px;border-radius:0 8px 8px 0;cursor:pointer;font-size:16px}
-    #searchButton:hover{background:#ffa500}
     .quick-links{margin-top:40px;display:flex;justify-content:center;gap:15px;flex-wrap:wrap}
-    .quick-links .btn{min-width:160px;font-size:18px;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:10px;transition:background-color .3s;line-height:1.2;height:50px}
-    .quick-links .btn i{font-size:18px;line-height:1;vertical-align:middle}
-    .quick-links .btn:hover{opacity:.85}
+    .quick-links .btn{min-width:180px;font-size:18px;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:10px;line-height:1.2;height:50px}
     .announcements{margin-top:50px;max-width:800px;text-align:left}
     .announcements h2{color:#232f3e;margin-bottom:15px;border-bottom:2px solid #ffa500;padding-bottom:5px}
     .announcements ul{list-style:none}
@@ -42,8 +35,8 @@
     <div class="bar"></div><div class="bar"></div><div class="bar"></div>
   </div>
   <nav class="nav" id="navbar" aria-label="Primary Navigation">
-    <a href="{{ url_for('submit_ticket') }}">Submit a Ticket</a>
     <a href="{{ url_for('tickets') }}">View Tickets</a>
+    <a href="{{ url_for('admin_users') }}">Manage Users</a>
     {% if 'username' in session %}
       <a href="{{ url_for('logout') }}" class="btn btn-danger" onclick="return confirmLogout(event)">Logout</a>
     {% else %}
@@ -66,22 +59,17 @@
 {% endwith %}
 
 <div class="welcome-container" role="main">
-  <h1>Welcome to the Apprentice Helpdesk</h1>
-  {% if 'username' in session %}
-    <p class="user-greeting">Hello, <strong>{{ session['username'] }}</strong>!</p>
-  {% endif %}
-  <p>We’re here to assist you with all your queries and issues. Feel free to explore our help topics or submit a ticket for personalised support.</p>
+  <h1>Welcome, {% if 'username' in session %} {{ session['username'] }}{% endif %}!</h1>
+  <p>Use the links below to triage tickets, manage users, and keep the helpdesk running smoothly.</p>
 
-  <div class="quick-links" role="navigation" aria-label="Quick Links">
-    <button onclick="location.href='{{ url_for('submit_ticket') }}'" class="btn btn-success" aria-label="Submit a Ticket">
-      <i class="fas fa-plus-circle"></i> Submit a Ticket
+  <div class="quick-links" role="navigation" aria-label="Admin Quick Links">
+    <button onclick="location.href='{{ url_for('tickets') }}'" class="btn btn-primary" aria-label="View Tickets">
+      <i class="fas fa-ticket-alt"></i> View Tickets
     </button>
-    <button onclick="location.href='{{ url_for('tickets') }}'" class="btn btn-primary" aria-label="View My Tickets">
-      <i class="fas fa-ticket-alt"></i> View My Tickets
+    <button onclick="location.href='{{ url_for('admin_users') }}'" class="btn btn-warning" aria-label="Manage Users">
+      <i class="fas fa-user-cog"></i> Manage Users
     </button>
-    <button onclick="location.href='/faq'" class="btn btn-info" aria-label="FAQ">
-      <i class="fas fa-question-circle"></i> FAQ
-    </button>
+
   </div>
 
   <section class="announcements" aria-live="polite" aria-atomic="true" aria-relevant="additions removals">

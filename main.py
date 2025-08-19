@@ -1,17 +1,26 @@
+
+from datetime import datetime
+from flask import session, render_template, redirect, url_for
 from app import app
 
 
 @app.route('/')
 def home():
-    from flask import session, render_template, redirect, url_for
-    print(app.jinja_loader.searchpath)
+    # Not logged in? go to login
+    if 'username' not in session:
+        return redirect(url_for('login'))
 
-    if 'username' in session:
-        return render_template('index.html')
-    return redirect(url_for('login'))
+    role = session.get('role')
+
+    # Any data you normally pass to the home page
+    announcements = []  # replace with get_announcements() if you have it
+    current_year = datetime.now().year
+
+    # Pick the right template per role
+    template = 'admin_home.html' if role == 'admin' else 'index.html'
+    return render_template(template, announcements=announcements, current_year=current_year)
 
 
-from flask import render_template
 
 
 @app.route("/faq")
