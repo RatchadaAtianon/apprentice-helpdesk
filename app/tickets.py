@@ -1,6 +1,18 @@
 from flask import render_template, request, redirect, url_for, session, flash
 from app import app
 from app.db import get_db_connection, get_user_id, get_ticket_by_id
+from functools import wraps
+
+
+def apprentice_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        # allow only explicit 'apprentice' role
+        if session.get('role') != 'apprentice':
+            flash('Admins cannot submit tickets.', 'error')
+            return redirect(url_for('tickets'))
+        return f(*args, **kwargs)
+    return wrapper
 
 
 def login_required(f):
@@ -15,6 +27,7 @@ def login_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
 
 
 def admin_required(f):
@@ -90,9 +103,9 @@ def tickets():
 
     return render_template('tickets.html', tickets=tickets)
 
-
 @app.route('/submit_ticket', methods=['GET', 'POST'])
 @login_required
+@apprentice_required
 def submit_ticket():
     if request.method == 'POST':
         title = request.form['title']
