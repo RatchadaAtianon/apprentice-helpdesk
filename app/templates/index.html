@@ -190,8 +190,10 @@
         {% if session['role'] == 'admin' %}
         <a href="{{ url_for('admin_users') }}">Manage Users</a>
         {% endif %}
-        <a href="#" class="btn btn-danger" onclick="confirmLogout()">Logout</a>
-        >
+        <a href="{{ url_for('logout') }}"
+           class="btn btn-danger"
+           onclick="return confirmLogout(event)">Logout</a>
+
         {% else %}
         <a href="/login" class="btn btn-warning">Login</a>
         {% endif %}
@@ -214,13 +216,11 @@
 <!-- Main Welcome Content -->
 <div class="welcome-container" role="main">
     <h1>Welcome to the Apprentice Helpdesk</h1>
-       {% if 'username' in session %}
+    {% if 'username' in session %}
     <p class="user-greeting">Hello, <strong>{{ session['username'] }}</strong>! </p>
     {% endif %}
     <p>We’re here to assist you with all your queries and issues. Feel free to explore our help topics or submit a
         ticket for personalised support.</p>
-
-
 
 
     <!-- Quick Links -->
@@ -257,53 +257,63 @@
 
 
 <script>
-    // Toggle navigation menu for hamburger
-    function toggleNav() {
-        const nav = document.getElementById('navbar');
-        nav.classList.toggle('active');
-    }
+      function toggleNav() {
+    const nav = document.getElementById('navbar');
+    if (nav) nav.classList.toggle('active');
+  }
 
-    // Allow keyboard toggle on hamburger for accessibility
-    document.querySelector('.hamburger').addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggleNav();
-        }
-    });
-
-    // Handle quick search button click
-    document.getElementById('searchButton').addEventListener('click', function () {
-        const query = document.getElementById('searchInput').value.trim();
-        if (query) {
-            // Redirect to search results page or tickets filtered by search query
-            window.location.href = '/search?query=' + encodeURIComponent(query);
-        } else {
-            Swal.fire('Please enter a search term to continue.');
-        }
-    });
-
-    // Optional: enter key triggers search
-    document.getElementById('searchInput').addEventListener('keyup', function (event) {
-        if (event.key === 'Enter') {
-            document.getElementById('searchButton').click();
-        }
-    });
-
-function confirmLogout() {
-Swal.fire({
-    title: 'Are you sure you want to logout?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#dc3545',
-    cancelButtonColor: '#6c757d',
-    confirmButtonText: 'Logout'
-}).then((result) => {
-    if (result.isConfirmed) {
+  // Confirm then redirect to logout
+  function confirmLogout(e) {
+    if (e) e.preventDefault();
+    Swal.fire({
+      title: 'Are you sure you want to logout?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Logout'
+    }).then((result) => {
+      if (result.isConfirmed) {
         window.location.href = '{{ url_for("logout") }}';
-    }
-});
-}
+      }
+    });
+    return false; // prevent the default link action
+  }
+    // Toggle nav + confirmLogout stay as you have them...
+
+    // Guarded quick-search bindings (only attach if elements exist)
+    (function () {
+      const searchBtn = document.getElementById('searchButton');
+      const searchInput = document.getElementById('searchInput');
+      if (!searchBtn || !searchInput) return;
+
+      searchBtn.addEventListener('click', function () {
+        const query = searchInput.value.trim();
+        if (query) {
+          window.location.href = '/search?query=' + encodeURIComponent(query);
+        } else {
+          Swal.fire('Please enter a search term to continue.');
+        }
+      });
+
+      searchInput.addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') searchBtn.click();
+      });
+    })();
+
+     // Fade out "success" alerts after 2s
+    $(function () {
+      const $successAlerts = $(".alert.alert-success");
+      if ($successAlerts.length) {
+        setTimeout(function () {
+          $successAlerts.fadeTo(400, 0).slideUp(400, function () {
+            $(this).remove();
+          });
+        }, 2000);
+      }
+    });
 </script>
+
 </body>
 
 </html>

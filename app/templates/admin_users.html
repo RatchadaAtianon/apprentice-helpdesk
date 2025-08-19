@@ -290,6 +290,16 @@ table.table td, table.table th {
                 }
             });
         }
+          $(function () {
+    const $successAlerts = $(".flashes .alert.alert-success");
+    if ($successAlerts.length) {
+      setTimeout(function () {
+        $successAlerts.fadeTo(400, 0).slideUp(400, function () {
+          $(this).remove();
+        });
+      }, 2000);
+    }
+  });
     </script>
 
 
