@@ -34,7 +34,9 @@
         <div class="bar"></div>
     </div>
     <nav class="nav" id="navbar">
+        {% if session['role'] != 'admin' %}
         <a href="/submit_ticket">Submit a Ticket</a>
+        {% endif %}
         <a href="/tickets">View Tickets</a>
         {% if 'username' in session %}
         {% if session['role'] == 'admin' %}
@@ -65,9 +67,11 @@
         <a href="{{ url_for('home') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Back to Home
         </a>
+           {% if session['role'] != 'admin' %}
         <a href="{{ url_for('submit_ticket') }}" class="btn btn-success">
             <i class="fas fa-plus-circle"></i> Submit New Ticket
         </a>
+            {% endif %}
     </div>
 
     <!-- Filter / Search Form -->
@@ -124,6 +128,7 @@
                     <!-- 🆔 New: Search by Apprentice ID -->
 
                 </div>
+
 
                 <div class="form-row justify-content-center mt-3">
                     <div class="col-6 col-md-3 mb-2">

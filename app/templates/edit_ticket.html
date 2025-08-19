@@ -142,7 +142,9 @@
         <div class="bar"></div>
     </div>
     <nav class="nav" id="navbar">
+        {% if session['role'] != 'admin' %}
         <a href="/submit_ticket">Submit a Ticket</a>
+        {% endif %}
         <a href="/tickets">View Tickets</a>
         {% if 'username' in session %}
         {% if session['role'] == 'admin' %}

@@ -66,9 +66,9 @@
 {% endwith %}
 
 <div class="welcome-container" role="main">
-  <h1>Welcome to the Apprentice Helpdesk</h1>
+
   {% if 'username' in session %}
-    <p class="user-greeting">Hello, <strong>{{ session['username'] }}</strong>!</p>
+    <h1 class="user-greeting">Hello, <strong>{{ session['username'] }}</strong>!</h1>
   {% endif %}
   <p>We’re here to assist you with all your queries and issues. Feel free to explore our help topics or submit a ticket for personalised support.</p>
 
