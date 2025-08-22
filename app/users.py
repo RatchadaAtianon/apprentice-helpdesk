@@ -1,41 +1,19 @@
-import os
+# app/users.py (or wherever this module lives)
+
 from functools import wraps
 
 from flask import (
     render_template, request, redirect, url_for, session, flash, abort
 )
-from werkzeug.security import generate_password_hash
 
-from app import app
+from flask_mail import Message
+
+from app import app, bcrypt, mail, ts
 from app.db import get_db_connection
-
-# --- Email + token deps ---
-from flask_mail import Mail, Message
-from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
-
-# ------------------ App/Email Config ------------------
-# Make sure SECRET_KEY is set elsewhere in your app; fallback here if needed
-app.config.setdefault("SECRET_KEY", os.environ.get("SECRET_KEY", "change-me"))
-
-# SMTP settings (use env vars in production)
-app.config.setdefault("MAIL_SERVER", os.environ.get("MAIL_SERVER", "smtp.gmail.com"))
-app.config.setdefault("MAIL_PORT", int(os.environ.get("MAIL_PORT", "587")))
-app.config.setdefault("MAIL_USE_TLS", os.environ.get("MAIL_USE_TLS", "true").lower() == "true")
-app.config.setdefault("MAIL_USERNAME", os.environ.get("MAIL_USERNAME", ""))   # your email/login
-app.config.setdefault("MAIL_PASSWORD", os.environ.get("MAIL_PASSWORD", ""))   # app password
-app.config.setdefault(
-    "MAIL_DEFAULT_SENDER",
-    (
-        os.environ.get("MAIL_DEFAULT_NAME", "Apprentice Helpdesk"),
-        os.environ.get("MAIL_DEFAULT_EMAIL", os.environ.get("MAIL_USERNAME", "")),
-    ),
-)
-
-mail = Mail(app)
-ts = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+from itsdangerous import BadSignature, SignatureExpired
 
 
-# ------------------ Auth/Role Decorators ------------------
+# ------------------ Auth/Role Decorator ------------------
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -44,7 +22,8 @@ def admin_required(f):
             return redirect(url_for("login"))
         conn = get_db_connection()
         user = conn.execute(
-            "SELECT role FROM users WHERE username = ?", (session["username"],)
+            "SELECT role FROM users WHERE username = ?",
+            (session["username"],),
         ).fetchone()
         conn.close()
         if not user or user["role"] != "admin":
@@ -90,7 +69,7 @@ def forgot_password():
                 )
                 mail.send(msg)
             except Exception as e:
-                # Fallback for local/dev: log the link so you can test without SMTP
+                # Dev fallback: log the link so you can test without SMTP working
                 app.logger.warning("Reset email failed to send: %s", e)
                 app.logger.info("Password reset link (dev): %s", reset_url)
 
@@ -113,20 +92,33 @@ def reset_password(token):
         return redirect(url_for("forgot_password"))
 
     if request.method == "POST":
-        pwd = (request.form.get("password") or "")
-        confirm = (request.form.get("confirm_password") or "")
+        pwd = (request.form.get("password") or "").strip()
+        confirm = (
+            request.form.get("confirm_password")
+            or request.form.get("confirmPassword")  # tolerate camelCase from older templates
+            or ""
+        )
+        confirm = confirm.strip()
+
+        # (Optional) debug without leaking secrets
+        app.logger.debug("Reset form keys: %s", list(request.form.keys()))
+        app.logger.debug("Lengths: pwd=%d confirm=%d", len(pwd), len(confirm))
+
         if len(pwd) < 8:
             flash("Password must be at least 8 characters.", "error")
             return redirect(request.url)
+
         if pwd != confirm:
             flash("Passwords do not match.", "error")
             return redirect(request.url)
 
-        # Update password
+        # Store a bcrypt hash (consistent with login)
+        hashed = bcrypt.generate_password_hash(pwd).decode("utf-8")
+
         conn = get_db_connection()
         conn.execute(
             "UPDATE users SET password = ? WHERE LOWER(email) = ?",
-            (generate_password_hash(pwd), email.lower()),
+            (hashed, email.lower()),
         )
         conn.commit()
         conn.close()
@@ -145,7 +137,8 @@ def admin_users():
     role_filter = request.args.get("role")
     if role_filter:
         users = conn.execute(
-            "SELECT * FROM users WHERE role = ?", (role_filter,)
+            "SELECT * FROM users WHERE role = ?",
+            (role_filter,),
         ).fetchall()
     else:
         users = conn.execute("SELECT * FROM users").fetchall()
