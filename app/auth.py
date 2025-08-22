@@ -54,7 +54,7 @@ def register():
         flash('Registration successful! You are now logged in.', 'success')
         return redirect(url_for('home'))
 
-    return render_template('register.html')
+    return render_template('login.html')
 
 
 @app.route('/logout')
